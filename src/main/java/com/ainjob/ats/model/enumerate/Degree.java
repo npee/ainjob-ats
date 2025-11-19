@@ -36,10 +36,13 @@ public enum Degree {
         return Arrays.stream(Degree.values())
                 .filter(degree -> degree.getDescription().equals(description))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Invalid description: " + description));
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 값입니다: " + description));
     }
 
     public static List<Degree> getHigherOrEqual(Degree degree) {
+        if (degree == null) {
+            return Arrays.asList(Degree.values());
+        }
         return Arrays.stream(Degree.values())
                 .filter(d -> d.ordinal() >= degree.ordinal())
                 .toList();

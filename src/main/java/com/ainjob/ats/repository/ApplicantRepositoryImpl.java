@@ -45,14 +45,12 @@ public class ApplicantRepositoryImpl implements ApplicantRepository {
                 .leftJoin(applicantCareer).on(applicantCareer.applicant.eq(applicant))
                 .leftJoin(filterSkill).on(
                         filterSkill.applicantCareer.eq(applicantCareer)
-                                .and(filterSkill.name.in(search.getSkills()))
+                                .and(search.getSkills() == null ? null : filterSkill.name.in(search.getSkills()))
                 )
+                .leftJoin(allSkill).on(allSkill.applicantCareer.eq(applicantCareer))
                 .leftJoin(ats).on(ats.applicant.eq(applicant))
                 .where(
                         search.getStatus() != null ? ats.status.eq(search.getStatus()) : null,
-                        filterSkill.isNotNull()
-                )
-                .where(
                         (search.getDegrees() != null && !search.getDegrees().isEmpty()) ? applicantEducation.highestEducationLevel.in(search.getDegrees()) : null,
                         search.getMajor() != null ? applicantMajor.majorName.eq(search.getMajor()) : null,
                         (search.getMinCareerYears() != null) ? applicant.careerYears.goe(search.getMinCareerYears()) : null,
@@ -71,7 +69,7 @@ public class ApplicantRepositoryImpl implements ApplicantRepository {
                 .leftJoin(applicantCareer).on(applicantCareer.applicant.eq(applicant))
                 .leftJoin(filterSkill).on(
                         filterSkill.applicantCareer.eq(applicantCareer)
-                                .and(filterSkill.name.in(search.getSkills()))
+                                .and(search.getSkills() == null ? null : filterSkill.name.in(search.getSkills()))
                 )
                 .leftJoin(allSkill).on(allSkill.applicantCareer.eq(applicantCareer))
                 .leftJoin(ats).on(ats.applicant.eq(applicant))
@@ -96,15 +94,12 @@ public class ApplicantRepositoryImpl implements ApplicantRepository {
                 .leftJoin(applicantCareer).on(applicantCareer.applicant.eq(applicant))
                 .leftJoin(filterSkill).on(
                         filterSkill.applicantCareer.eq(applicantCareer)
-                                .and(filterSkill.name.in(search.getSkills()))
+                                .and(search.getSkills() == null ? null : filterSkill.name.in(search.getSkills()))
                 )
                 .leftJoin(allSkill).on(allSkill.applicantCareer.eq(applicantCareer))
                 .leftJoin(ats).on(ats.applicant.eq(applicant))
                 .where(
                         search.getStatus() != null ? ats.status.eq(search.getStatus()) : null,
-                        filterSkill.isNotNull()
-                )
-                .where(
                         (search.getDegrees() != null && !search.getDegrees().isEmpty()) ? applicantEducation.highestEducationLevel.in(search.getDegrees()) : null,
                         search.getMajor() != null ? applicantMajor.majorName.eq(search.getMajor()) : null,
                         (search.getMinCareerYears() != null) ? applicant.careerYears.goe(search.getMinCareerYears()) : null,
@@ -131,7 +126,7 @@ public class ApplicantRepositoryImpl implements ApplicantRepository {
                 .fetch();
 
         if (atsIds.isEmpty()) {
-            throw new IllegalArgumentException("해당 지원자의 현재 상태가 '" + from.getDescription() + "'가 아닙니다.");
+            throw new IllegalArgumentException("해당 지원자의 현재 상태가 '" + from.getDescription() + "'이/가 아닙니다.");
         }
 
         queryFactory.update(ats)

@@ -32,6 +32,6 @@ public enum ProcessStatus {
         return Arrays.stream(ProcessStatus.values())
                 .filter(status -> status.getDescription().equals(description))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Invalid description: " + description));
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 값입니다: " + description));
     }
 }

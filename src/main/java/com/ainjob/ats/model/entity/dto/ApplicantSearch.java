@@ -34,11 +34,13 @@ public class ApplicantSearch {
                 this.maxCareerYears = Integer.MAX_VALUE;
             }
         }
-        // 스플릿 후 trim, lowercase 변환 후 재조립
         this.skills = skills.stream()
                 .map(String::trim)
                 .map(String::toLowerCase)
                 .toList();
+        if (this.skills.size() == 1 && this.skills.get(0).isEmpty()) {
+            this.skills = null;
+        }
         this.status = status;
         this.pageable = pageable;
     }
