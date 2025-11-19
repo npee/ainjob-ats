@@ -25,6 +25,10 @@ public enum ProcessStatus {
 
     public static ProcessStatus fromDescription(String description) {
 
+        if (description == null || description.isEmpty()) {
+            return null;
+        }
+
         return Arrays.stream(ProcessStatus.values())
                 .filter(status -> status.getDescription().equals(description))
                 .findFirst()

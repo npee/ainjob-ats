@@ -30,5 +30,5 @@ public class ApplicantEducation {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Degree higherEducationLevel;
+    private Degree highestEducationLevel;
 }

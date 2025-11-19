@@ -2,10 +2,7 @@ package com.ainjob.ats.model.entity;
 
 import com.ainjob.ats.model.enumerate.SkillType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * 지원자 보유 기술 Entity
@@ -15,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode(of = {"applicantCareer", "name", "type"})
 public class ApplicantSkill {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

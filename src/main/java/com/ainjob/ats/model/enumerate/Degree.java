@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 'HS (고등학교 졸업)
@@ -21,16 +22,26 @@ public enum Degree {
     AD("준학사"),
     BD("학사"),
     MD("석사"),
-    DD("박사"),
-    ETC("기타");
+    DD("박사");
 
     private final String description;
 
     public static Degree fromDescription(String description) {
-
+        if (description == null || description.isEmpty()) {
+            return null;
+        }
+        if (description.equals("대졸")) {
+            return BD;
+        }
         return Arrays.stream(Degree.values())
                 .filter(degree -> degree.getDescription().equals(description))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Invalid description: " + description));
+    }
+
+    public static List<Degree> getHigherOrEqual(Degree degree) {
+        return Arrays.stream(Degree.values())
+                .filter(d -> d.ordinal() >= degree.ordinal())
+                .toList();
     }
 }

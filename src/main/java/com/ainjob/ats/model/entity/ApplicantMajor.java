@@ -3,10 +3,7 @@ package com.ainjob.ats.model.entity;
 import com.ainjob.ats.model.enumerate.Degree;
 import com.ainjob.ats.model.enumerate.MajorGroupCode;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * 지원자 전공 Entity
@@ -16,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode(of = {"applicantEducation", "degree", "majorName", "majorGroupCode"})
 public class ApplicantMajor {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

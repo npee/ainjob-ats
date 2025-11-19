@@ -12,5 +12,5 @@ public class ApplicantPagedResponse {
     private List<ApplicantResponse> applicants;
     private int page;
     private int size;
-    private int totalElements;
+    private long totalElements;
 }

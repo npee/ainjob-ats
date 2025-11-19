@@ -21,5 +21,5 @@ public class ApplicantResponse {
     private String major;
     private Integer careerYears;
     private List<String> skills;
-    private ProcessStatus status;
+    private String status;
 }
