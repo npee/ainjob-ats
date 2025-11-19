@@ -1,10 +1,21 @@
 package com.ainjob.ats.controller;
 
+import com.ainjob.ats.model.response.ApplicantResponse;
+import com.ainjob.ats.service.ApplicantService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/applicants")
+@RequiredArgsConstructor
 public class ApplicantController {
+
+    private final ApplicantService applicantService;
+
+    @GetMapping("/{id}")
+    public ApplicantResponse getApplicantById(@PathVariable("id") Long id) {
+        return applicantService.getApplicantById(id);
+    }
 
     /**
      * 지원자 목록 조회
