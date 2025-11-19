@@ -1,15 +1,19 @@
 package com.ainjob.ats.model.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
-@AllArgsConstructor
 public class ApplicantUpdateResponse {
 
-    private Long id;
-    private String status;
-    private LocalDateTime changedAt;
+    private final Long id;
+    private final String status;
+    private final LocalDateTime changedAt;
+
+    public ApplicantUpdateResponse(Long applicantId, String status, LocalDateTime changedAt) {
+        this.id = applicantId;
+        this.status = status;
+        this.changedAt = changedAt;
+    }
 }

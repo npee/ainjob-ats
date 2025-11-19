@@ -1,36 +1,25 @@
 package com.ainjob.ats.service;
 
-import com.ainjob.ats.model.entity.Applicant;
 import com.ainjob.ats.model.entity.dto.ApplicantProjection;
 import com.ainjob.ats.model.entity.dto.ApplicantSearch;
+import com.ainjob.ats.model.enumerate.ProcessStatus;
 import com.ainjob.ats.model.response.ApplicantPagedResponse;
 import com.ainjob.ats.model.response.ApplicantResponse;
+import com.ainjob.ats.model.response.ApplicantUpdateResponse;
 import com.ainjob.ats.repository.ApplicantJpaRepository;
 import com.ainjob.ats.repository.ApplicantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ApplicantService {
 
     private final ApplicantRepository applicantRepository;
-    private final ApplicantJpaRepository applicantJpaRepository;
-
-    public ApplicantResponse getApplicantById(Long id) {
-        Applicant applicant = applicantJpaRepository.findById(id).orElseThrow(() -> new RuntimeException("Applicant not found"));
-        return ApplicantResponse.builder()
-                .id(applicant.getId())
-                .name(applicant.getName())
-                .email(applicant.getEmail())
-                .careerYears(applicant.getCareerYears())
-                .build();
-
-    }
 
     public ApplicantPagedResponse getApplicantBy(ApplicantSearch search) {
         Page<ApplicantProjection> pages = applicantRepository.findApplicantsBy(search);
@@ -48,5 +37,18 @@ public class ApplicantService {
                 .toList();
 
         return new ApplicantPagedResponse(contents, pages.getNumber(), pages.getSize(), pages.getTotalElements());
+    }
+
+    public ApplicantUpdateResponse updateApplicant(Long applicantId, String from, String to) {
+        ProcessStatus previousStatus = ProcessStatus.fromDescription(from);
+        ProcessStatus newStatus = ProcessStatus.fromDescription(to);
+
+        if (previousStatus == null || newStatus == null) {
+            throw new IllegalArgumentException("잘못된 진행상태 값입니다.");
+        }
+
+        applicantRepository.updateApplicantStatus(applicantId, previousStatus, newStatus);
+
+        return new ApplicantUpdateResponse(applicantId, newStatus.getDescription(), LocalDateTime.now());
     }
 }

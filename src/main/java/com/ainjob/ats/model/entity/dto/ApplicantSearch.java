@@ -29,6 +29,9 @@ public class ApplicantSearch {
             } else if (parts.length == 1) {
                 this.minCareerYears = Integer.parseInt(parts[0]);
                 this.maxCareerYears = Integer.MAX_VALUE;
+            } else {
+                this.minCareerYears = 0;
+                this.maxCareerYears = Integer.MAX_VALUE;
             }
         }
         // 스플릿 후 trim, lowercase 변환 후 재조립

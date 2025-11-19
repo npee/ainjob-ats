@@ -5,8 +5,10 @@ import com.ainjob.ats.model.entity.QApplicantSkill;
 import com.ainjob.ats.model.entity.dto.ApplicantProjection;
 import com.ainjob.ats.model.entity.dto.ApplicantSearch;
 import com.ainjob.ats.model.entity.dto.QApplicantProjection;
+import com.ainjob.ats.model.enumerate.ProcessStatus;
 import com.querydsl.core.group.GroupBy;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -29,7 +31,7 @@ public class ApplicantRepositoryImpl implements ApplicantRepository {
     private final JPAQueryFactory queryFactory;
 
     QApplicantSkill filterSkill = new QApplicantSkill("filterSkill");
-    QApplicantSkill allSkill    = new QApplicantSkill("allSkill");
+    QApplicantSkill allSkill = new QApplicantSkill("allSkill");
     QATS ats = new QATS("ats");
 
     @Override
@@ -117,4 +119,24 @@ public class ApplicantRepositoryImpl implements ApplicantRepository {
         return new PageImpl<>(result, search.getPageable(), count);
     }
 
+
+    @Override
+    @Transactional
+    public void updateApplicantStatus(Long applicantId, ProcessStatus from, ProcessStatus to) {
+        List<Long> atsIds = queryFactory.select(ats.id)
+                .from(ats)
+                .where(
+                        ats.applicant.id.eq(applicantId),
+                        ats.status.eq(from))
+                .fetch();
+
+        if (atsIds.isEmpty()) {
+            throw new IllegalArgumentException("해당 지원자의 현재 상태가 '" + from.getDescription() + "'가 아닙니다.");
+        }
+
+        queryFactory.update(ats)
+                .set(ats.status, to)
+                .where(ats.id.in(atsIds))
+                .execute();
+    }
 }
