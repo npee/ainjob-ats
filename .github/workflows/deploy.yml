@@ -1,0 +1,57 @@
+name: CI/CD Deploy to EC2
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+        # Java 설정
+      - name: Set up Amazon Corretto 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '17'
+
+        # Gradle 빌드
+      - name: Build with Gradle
+        run: ./gradlew clean build
+
+        # EC2에 SSH 키 설정
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+        # known_hosts 등록
+      - name: Add known_hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+        # JAR 파일 EC2로 복사
+      - name: Copy JAR to EC2
+        run: |
+          scp build/libs/*.jar ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:~/apps/ainjob/app.jar
+
+        # EC2에서 애플리케이션 재시작
+      - name: Restart app on EC2
+        run: |
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          pids=$(ps aux | grep 'app.jar' | grep -v grep | awk '{print $2}')
+          if [ ! -z "$pids" ]; then
+            kill -9 $pids
+          fi
+
+          # DB 환경변수 설정
+          export SPRING_DATASOURCE_URL='${{ secrets.DB_URL }}'
+          export SPRING_DATASOURCE_USERNAME='${{ secrets.DB_USER }}'
+          export SPRING_DATASOURCE_PASSWORD='${{ secrets.DB_PASSWORD }}'
+          
+          nohup java -jar ~/apps/ainjob/app.jar > ~/apps/ainjob/app.log 2>&1 &
+          EOF
