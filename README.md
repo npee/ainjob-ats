@@ -15,6 +15,21 @@ QueryDSL 기반 고급 검색, ID 기반 페이징, OpenAPI 3.0 문서 자동화
 | Build Tool| Gradle                             |
 | 기타       | Lombok                             |
 
+## 🚀 CI/CD & 배포 아키텍처
+
+> 본 프로젝트는 GitHub Actions + AWS EC2 + Nginx + 도메인(Cloudflare) + 외부 DB 조합으로 완전 자동 배포 환경을 구성했습니다.
+
+### 🔁 배포 파이프라인 개요
+| 단계                       | 설명                                                                   |
+|--------------------------|----------------------------------------------------------------------|
+| 1. Push to main          | 개발자가 코드를 push 하면 배포 자동 시작                                            |
+| 2. GitHub Actions        | Gradle Build → JAR 생성                                                |
+| 3. Secure Copy(SCP)      | EC2 서버로 JAR 자동 업로드                                                   |
+| 4. SSH Remote Deploy     | EC2 서버에서 기존 프로세스 종료 + 새로운 버전 실행                                      |
+| 5. Reverse Proxy (Nginx) | 외부 요청을 80/443 → Spring Boot(8080)으로 포워딩                              |
+| 6. HTTPS 인증              | Let’s Encrypt 인증서 자동 갱신                                              |
+| 7. 외부 DB 연동              | MySQL은 개인 NAS/서버에 구축하여 비용 최적화, EC2 ↔ DB 접속은 Tailscale VPN 으로 안전하게 통신 |
+
 ## 📁 프로젝트 구조 (Domain-Driven Package)
 ```text
 src/main/java/com.ainjob
@@ -58,10 +73,10 @@ src/main/java/com.ainjob
 
 ## 📄 Swagger/OpenAPI 문서
 ### 접속 URL
-| URL                     | 설명              |
-|------------------------|-----------------|
-| /swagger-ui/index.html  | UI 화면          |
-| /v3/api-docs           | OpenAPI JSON    |
+| URL | 설명              |
+|--|-----------------|
+| https://ainjob.npee.io/swagger-ui/index.html | UI 화면          |
+| https://ainjob.npee.io/v3/api-docs | OpenAPI JSON    |
 
 ## 🛠 실행 방법
 ### 1) 별도로 관리되는 설정 파일(application.yml) 추가
