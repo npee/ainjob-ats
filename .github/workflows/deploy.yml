@@ -49,9 +49,9 @@ jobs:
           fi
 
           # DB 환경변수 설정
-          export SPRING_DATASOURCE_URL='${{ secrets.DB_URL }}'
-          export SPRING_DATASOURCE_USERNAME='${{ secrets.DB_USER }}'
-          export SPRING_DATASOURCE_PASSWORD='${{ secrets.DB_PASSWORD }}'
+          export SPRING_DATASOURCE_URL='${{ secrets.SPRING_DATASOURCE_URL }}'
+          export SPRING_DATASOURCE_USERNAME='${{ secrets.SPRING_DATASOURCE_USERNAME }}'
+          export SPRING_DATASOURCE_PASSWORD='${{ secrets.SPRING_DATASOURCE_PASSWORD }}'
           
           nohup java -jar ~/apps/ainjob/app.jar > ~/apps/ainjob/app.log 2>&1 &
           EOF
