@@ -178,7 +178,8 @@ gradle-app.setting
 ### Configuration files ###
 *.env
 *.env.local
-*.yml
+!application.yml
+application-*.yml
 *.yaml
 *.properties
 
