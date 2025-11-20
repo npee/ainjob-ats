@@ -36,8 +36,14 @@ src/main/java/com.ainjob
 
 ```
 
+## 🗃 ERD
+![ERD Diagram](./docs/ainjob_erd.png)
+### 🔗 ERDCloud Link
+- https://www.erdcloud.com/d/tZJhAZ6gxGJFpm6Tm
+
+
 ## 🧠 주요 기능
-### 🔎 지원자 필터 조회
+### 🔎 지원자 필터 조회 API
 - 학력(고졸/준학사/학사(대졸)/석사/박사)
 - 전공 계열
 - 보유 기술 복수 검색
